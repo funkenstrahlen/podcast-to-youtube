@@ -1,7 +1,7 @@
 *.mkv
 *.mp3
 *.m4a
-*.png
+./*.png
 *.jpg
 Gemfile.lock
 config/client_secret.json
