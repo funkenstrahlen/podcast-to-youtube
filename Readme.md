@@ -27,24 +27,31 @@ bundle
 Go to [Google Developer Console](https://console.developers.google.com/) and login to create API credentials.
 
 Go to the API section
+
 ![](images/goto_api.png)
 
 Go to Youtube API
+
 ![](images/goto_youtube_api.png)
 
 Enable the API
+
 ![](images/enable_api.png)
 
 Go to the credentials section
+
 ![](images/goto_credentials.png)
 
 Add new OAuth2 credentials
+
 ![](images/add_oauth2.png)
 
 Configure them
+
 ![](images/config_oauth2.png)
 
 Download the credentials file and place it in this project `config` folder.
+
 ![](images/download_json.png)
 
 Rename the credentials file
