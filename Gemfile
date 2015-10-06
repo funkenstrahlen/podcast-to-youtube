@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'feedjira'
-gem 'yt', '~> 0.25.5'
-gem 'json'
+gem 'feedjira', '~> 2.0'
+gem 'yt', '~> 0.25'
+gem 'json', '~> 1.7'
