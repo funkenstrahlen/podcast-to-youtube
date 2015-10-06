@@ -4,4 +4,4 @@
 ./*.png
 *.jpg
 Gemfile.lock
-config/client_secret.json
+client_secret.json
