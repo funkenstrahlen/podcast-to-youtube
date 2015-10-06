@@ -16,12 +16,9 @@ ruby is required to run the script
 apt-get install ruby ruby-dev zlib1g-dev
 ```
 
-Download the script and install the required gems via bundler
+Install the gem.
 ```
-git clone https://github.com/funkenstrahlen/podcast-to-youtube.git
-gem install bundler
-cd podcast-to-youtube
-bundle
+gem install podcast-to-youtube
 ```
 
 Go to [Google Developer Console](https://console.developers.google.com/) and login to create API credentials.
@@ -50,7 +47,7 @@ Configure them
 
 ![](images/config_oauth2.png)
 
-Download the credentials file and place it in this project `config` folder.
+Download the credentials file and place it in the same folder you are going to run the script. This folder will also contain all the audio and video files the scripts works with.
 
 ![](images/download_json.png)
 
@@ -63,7 +60,7 @@ Think about your upload limit! Videos with more than 15 minutes can only be uplo
 
 run the script
 ```
-ruby podcast-to-youtube.rb
+podcast-to-youtube
 ```
 
 You will have to open an OAuth2 Url in your browser to allow the script to access your Youtube account. Paste the authentication code you receive into the script prompt.
