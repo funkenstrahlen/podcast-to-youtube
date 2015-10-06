@@ -16,7 +16,7 @@ ruby is required to run the script
 apt-get install ruby ruby-dev zlib1g-dev
 ```
 
-Install the gem.
+Install the gem from [Rubygems.org](https://rubygems.org/gems/podcast-to-youtube).
 ```
 gem install podcast-to-youtube
 ```
