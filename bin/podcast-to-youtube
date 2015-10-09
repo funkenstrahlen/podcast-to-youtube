@@ -2,4 +2,4 @@
 
 require 'podcast-to-youtube'
 
-PodcastUploader.upload
+PodcastUploader.upload ('')

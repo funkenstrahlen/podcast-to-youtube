@@ -7,21 +7,20 @@ require 'rubygems'
 require 'json'
 
 class PodcastUploader
-	def self.upload()
+	def self.upload(podcast_feed_url = '', client_secret_file_path = 'client_secret.json', video_category_id = '28')
 		
-		client_secret_file_path = 'client_secret.json'
 		if File.file?(client_secret_file_path)
 			client_secret = JSON.parse(File.read(client_secret_file_path))
 		else 
 			raise "Please provide client_secret.json. This is required for the Youtube API authentication. More information can be found in the Readme."
 		end
 
-		video_category_id = '28'
-
-		puts "enter your podcast feed url and press enter"
-		url = gets.chomp
+		if podcast_feed_url.empty?
+			puts "enter your podcast feed url and press enter"
+			podcast_feed_url = gets.chomp
+		end
 		puts "parsing feed"
-		feed = Feedjira::Feed.fetch_and_parse url
+		feed = Feedjira::Feed.fetch_and_parse podcast_feed_url
 
 		puts "connecting to youtube account"
 		Yt.configure do |config|
