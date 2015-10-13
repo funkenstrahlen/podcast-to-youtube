@@ -11,6 +11,14 @@ ffmpeg is required to create the video files
 apt-get install ffmpeg
 ```
 
+Current ubuntu versions only have avconv in their ppa's. You can install ffmpeg by adding this ppa:
+
+```
+add-apt-repository ppa:mc3man/trusty-media
+apt-get update
+apt-get install ffmpeg
+```
+
 ruby is required to run the script
 ```
 apt-get install ruby ruby-dev zlib1g-dev
