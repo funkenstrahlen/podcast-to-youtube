@@ -62,7 +62,7 @@ class PodcastUploader
 		return Feedjira::Feed.fetch_and_parse podcast_feed_url
 	end
 
-	def upload(podcast_feed_url, video_category_id = '28')
+	def upload(podcast_feed_url, video_category_id)
 		feed = parse_feed
 
 		feed.entries.reverse_each do |entry|
