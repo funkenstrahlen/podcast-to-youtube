@@ -17,7 +17,7 @@ class PodcastUploader
 
 		puts "connecting to youtube account"
 		# check for refresh token in config file
-		if !@client_secret['installed']['refresh_token'].empty?
+		if !@client_secret['installed']['refresh_token'].nil?
 			puts "using refresh token"
 			authenticate_youtube_by_refresh_token
 		else
