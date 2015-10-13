@@ -30,7 +30,7 @@ class PodcastUploader
 			puts "open this url in a browser"
 			puts Yt::Account.new(scopes: ['youtube'], redirect_uri: redirect_uri).authentication_url
 			puts "paste the authentication code here and press enter"
-			auth_code = gets.chomp
+			auth_code = STDIN.gets.chomp
 			@account = Yt::Account.new authorization_code: auth_code, redirect_uri: redirect_uri
 
 			save_configuration
