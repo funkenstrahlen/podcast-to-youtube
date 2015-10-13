@@ -91,7 +91,7 @@ class PodcastUploader
 
 				if(convertCMD_status)
 					# upload to youtube
-					video_description = "#{entry.itunes_summary}\n\nMehr Infos und Links zur Episode: #{entry.url}\nVeröffentlicht: #{entry.published}\nEpisode herunterladen (Audio): #{entry.url}\n\nPodcast Webseite: #{feed.url}\nPodcast Abonnieren: #{feed.url}\nPodcast Author: #{feed.itunes_author}"
+					video_description = generate_video_description(entry, feed)
 					video_title = "#{feed.title} - #{entry.title}"
 					if @account.videos.any? {|video| video.title == video_title }
 						puts "do not upload video, as it is already online"
@@ -112,6 +112,17 @@ class PodcastUploader
 		end
 	end
 
-	private :load_configuration :save_configuration :authenticate_youtube_by_refresh_token :parse_feed
+	def generate_video_description(entry, feed)
+		video_description = "#{entry.itunes_summary}\n\n"
+		video_description += "Mehr Infos und Links zur Episode: #{entry.url}\n"
+		video_description += "Veröffentlicht: #{entry.published}\n"
+		video_description += "Episode herunterladen (Audio): #{entry.url}\n\n"
+		video_description += "Podcast Webseite: #{feed.url}\n"
+		video_description += "Podcast Abonnieren: #{feed.url}\n"
+		video_description += "Podcast Author: #{feed.itunes_author}"
+		return video_description
+	end
+
+	private :load_configuration :save_configuration :authenticate_youtube_by_refresh_token :parse_feed :generate_video_description
 
 end
