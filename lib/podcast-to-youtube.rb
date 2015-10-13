@@ -26,13 +26,7 @@ class PodcastUploader
 			authenticate_youtube_by_refresh_token
 		else
 			# otherwise authenticate with oauth2
-			redirect_uri = 'urn:ietf:wg:oauth:2.0:oob' # special redirect uri to make the user copy the auth_code to the application
-			puts "open this url in a browser"
-			puts Yt::Account.new(scopes: ['youtube'], redirect_uri: redirect_uri).authentication_url
-			puts "paste the authentication code here and press enter"
-			auth_code = STDIN.gets.chomp
-			@account = Yt::Account.new authorization_code: auth_code, redirect_uri: redirect_uri
-
+			authenticate_youtube_by_access_token
 			save_configuration
 		end
 	end
@@ -91,10 +85,24 @@ class PodcastUploader
 
 		def authenticate_youtube_by_refresh_token
 			puts "reauthenticate youtube with refresh token"
-			@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
+			begin  
+				@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
+			rescue
+				puts "authentication with refresh token failed"
+				authenticate_youtube_by_access_token
+			end 
 			save_configuration
 		end
 
+		def authenticate_youtube_by_access_token
+			puts "authenticate youtube by access token"
+			redirect_uri = 'urn:ietf:wg:oauth:2.0:oob' # special redirect uri to make the user copy the auth_code to the application
+			puts "open this url in a browser"
+			puts Yt::Account.new(scopes: ['youtube'], redirect_uri: redirect_uri).authentication_url
+			puts "paste the authentication code here and press enter"
+			auth_code = STDIN.gets.chomp
+			@account = Yt::Account.new authorization_code: auth_code, redirect_uri: redirect_uri
+		end
 
 		def parse_feed(podcast_feed_url)
 			puts "parsing feed"
