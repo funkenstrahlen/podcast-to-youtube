@@ -36,7 +36,8 @@ end
 opt_parser.parse!
 
 if ARGV[0] == "upload"
-	uploader = PodcastUploader.new(options[:clientsecretfile])
+	uploader = PodcastUploader.new
+	uploader.authenticate_youtube(options[:clientsecretfile])
 	uploader.upload(options[:feedurl], options[:videocategoryid])
 else  
 	puts opt_parser

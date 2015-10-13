@@ -12,15 +12,10 @@ class PodcastUploader
 	@client_secret_file_path
 	@account
 
-	def initialize(client_secret_file_path = 'client_secret.json')
-		load_configuration client_secret_file_path
-		authenticate_youtube
-	end
-
-	def load_configuration(path)
-		if File.file?(client_secret_file_path)
-			@client_secret = JSON.parse(File.read(client_secret_file_path))
-			@client_secret_file_path = path
+	def load_configuration(file_path)
+		if File.file?(file_path)
+			@client_secret = JSON.parse(File.read(file_path))
+			@client_secret_file_path = file_path
 		else 
 			raise "Please provide client_secret.json. This is required for the Youtube API authentication. More information can be found in the Readme."
 		end
@@ -28,10 +23,12 @@ class PodcastUploader
 
 	def save_configuration
 		@client_secret['installed']['refresh_token'] = @account.authentication.refresh_token
-		File.write(client_secret_file_path, @client_secret.to_json)
+		File.write(@client_secret_file_path, @client_secret.to_json)
 	end
 
-	def authenticate_youtube
+	def authenticate_youtube(client_secret_file_path = 'client_secret.json')
+		load_configuration client_secret_file_path
+
 		puts "connecting to youtube account"
 		# check for refresh token in config file
 		if !@client_secret['installed']['refresh_token'].empty?
@@ -115,6 +112,6 @@ class PodcastUploader
 		end
 	end
 
-	private :load_configuration :save_configuration :authenticate_youtube :authenticate_youtube_by_refresh_token :parse_feed
+	private :load_configuration :save_configuration :authenticate_youtube_by_refresh_token :parse_feed
 
 end
