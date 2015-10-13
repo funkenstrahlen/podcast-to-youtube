@@ -16,16 +16,16 @@ class PodcastUploader
 		load_configuration client_secret_file_path
 
 		puts "connecting to youtube account"
+		Yt.configure do |config|
+			config.client_id = @client_secret['installed']['client_id']
+			config.client_secret = @client_secret['installed']['client_secret']
+		end
 		# check for refresh token in config file
 		if !@client_secret['installed']['refresh_token'].nil?
 			puts "using refresh token"
 			authenticate_youtube_by_refresh_token
 		else
 			# otherwise authenticate with oauth2
-			Yt.configure do |config|
-				config.client_id = @client_secret['installed']['client_id']
-				config.client_secret = @client_secret['installed']['client_secret']
-			end
 			redirect_uri = 'urn:ietf:wg:oauth:2.0:oob' # special redirect uri to make the user copy the auth_code to the application
 			puts "open this url in a browser"
 			puts Yt::Account.new(scopes: ['youtube'], redirect_uri: redirect_uri).authentication_url
