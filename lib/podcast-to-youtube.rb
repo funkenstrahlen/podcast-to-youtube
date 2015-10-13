@@ -62,7 +62,7 @@ class PodcastUploader
 		return Feedjira::Feed.fetch_and_parse podcast_feed_url
 	end
 
-	def upload(podcast_feed_url, video_category_id)
+	def upload(podcast_feed_url, video_category_id, privacy = :private)
 		feed = parse_feed
 
 		feed.entries.reverse_each do |entry|
@@ -101,7 +101,7 @@ class PodcastUploader
 						if @account.authentication.expired?
 							authenticate_youtube_by_refresh_token
 						end
-						@account.upload_video videofile, privacy_status: :private, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
+						@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
 					end
 				else
 					raise "generating videofile #{videofile} failed"
