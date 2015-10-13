@@ -75,6 +75,6 @@ Options
     -s, --clientsecretfile SECRET    path to the client_secret.json
     -c, --videocategoryid ID         youtube video category id for the uploaded vides
     -h, --help                       print this help
-``
+```
 
 You will have to open an OAuth2 Url in your browser to allow the script to access your Youtube account. Paste the authentication code you receive into the script prompt. After the first authentication the refresh token is saved in the client_secret.json. By using the refresh token the script can reauthenticate to youtube without user interaction.
