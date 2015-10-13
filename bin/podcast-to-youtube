@@ -9,34 +9,36 @@ require 'optparse'
 options = {}
 
 opt_parser = OptionParser.new do |opt|  
-  opt.banner = "Usage: podcast-to-youtube COMMAND [OPTIONS]"
-  opt.separator  ""
-  opt.separator  "Commands"
-  opt.separator  "     upload: upload an existing podcast feed to youtube"
-  opt.separator  ""
-  opt.separator  "Options"
+	opt.banner = "Usage: podcast-to-youtube COMMAND [OPTIONS]"
+	opt.separator  ""
+	opt.separator  "Commands"
+	opt.separator  "     upload: upload an existing podcast feed to youtube"
+	opt.separator  ""
+	opt.separator  "Options"
 
-  opt.on("-f","--feedurl URL","podcast feed url") do |feedurl|
-    options[:feedurl] = feedurl
-  end
+	opt.on("-f","--feedurl URL","podcast feed url") do |feedurl|
+		options[:feedurl] = feedurl
+	end
 
-  opt.on("-s","--clientsecretfile SECRET","path to the client_secret.json") do |clientsecretfile|
-    options[:clientsecretfile] = clientsecretfile
-  end
+	opt.on("-s","--clientsecretfile SECRET","path to the client_secret.json") do |clientsecretfile|
+		options[:clientsecretfile] = clientsecretfile
+	end
 
-  opt.on("-c","--videocategoryid ID","youtube video category id for the uploaded vides") do |videocategoryid|
-    options[:videocategoryid] = videocategoryid
-  end
+	opt.on("-c","--videocategoryid ID","youtube video category id for the uploaded vides") do |videocategoryid|
+		options[:videocategoryid] = videocategoryid
+	end
 
-  opt.on("-h","--help","print this help") do
-    puts opt_parser
-  end
+	opt.on("-h","--help","print this help") do
+		puts opt_parser
+	end
 end
 
 opt_parser.parse!
 
 if ARGV[0] == "upload"
-  	PodcastUploader.upload(options[:feedurl], options[:clientsecretfile], options[:videocategoryid])
+	uploader = PodcastUploader.new
+	uploader.authenticate_youtube(options[:clientsecretfile])
+	uploader.upload(options[:feedurl], options[:videocategoryid])
 else  
-  	puts opt_parser
+	puts opt_parser
 end  
