@@ -38,7 +38,7 @@ class PodcastUploader
 	end
 
 	def upload(podcast_feed_url, video_category_id, privacy = :private)
-		feed = parse_feed
+		feed = parse_feed podcast_feed_url
 
 		feed.entries.reverse_each do |entry|
 
@@ -96,7 +96,7 @@ class PodcastUploader
 		end
 
 
-		def parse_feed
+		def parse_feed(podcast_feed_url)
 			puts "parsing feed"
 			return Feedjira::Feed.fetch_and_parse podcast_feed_url
 		end
