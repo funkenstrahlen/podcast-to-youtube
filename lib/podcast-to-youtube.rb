@@ -17,7 +17,7 @@ class PodcastUploader
 			@client_secret = JSON.parse(File.read(file_path))
 			@client_secret_file_path = file_path
 		else 
-			raise "Please provide client_secret.json. This is required for the Youtube API authentication. More information can be found in the Readme."
+			raise "Could not find config file at #{file_path}. This is required for the Youtube API authentication. More information can be found in the Readme."
 		end
 	end
 
