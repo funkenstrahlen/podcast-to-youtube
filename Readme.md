@@ -58,9 +58,23 @@ mv client_secret_12345678-asdljkahsdlkjasdlkjasd.apps.googleusercontent.com.json
 
 Think about your upload limit! Videos with more than 15 minutes can only be uploaded if your Youtube accaunt is linked to your phone numer.
 
-run the script
+run the script (example)
 ```
-podcast-to-youtube
+podcast-to-youtube upload -f "http://podcast.funkenstrahlen.de/feed/m4a" -s client_secret.json -c 28
 ```
 
-You will have to open an OAuth2 Url in your browser to allow the script to access your Youtube account. Paste the authentication code you receive into the script prompt.
+Usage:
+```
+Usage: podcast-to-youtube COMMAND [OPTIONS]
+
+Commands
+     upload: upload an existing podcast feed to youtube
+
+Options
+    -f, --feedurl URL                podcast feed url
+    -s, --clientsecretfile SECRET    path to the client_secret.json
+    -c, --videocategoryid ID         youtube video category id for the uploaded vides
+    -h, --help                       print this help
+``
+
+You will have to open an OAuth2 Url in your browser to allow the script to access your Youtube account. Paste the authentication code you receive into the script prompt. After the first authentication the refresh token is saved in the client_secret.json. By using the refresh token the script can reauthenticate to youtube without user interaction.
