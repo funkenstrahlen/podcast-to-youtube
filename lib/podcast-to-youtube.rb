@@ -90,6 +90,7 @@ class PodcastUploader
 	private
 
 		def authenticate_youtube_by_refresh_token
+			puts "reauthenticate youtube with refresh token"
 			@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
 			save_configuration
 		end
@@ -101,6 +102,7 @@ class PodcastUploader
 		end
 
 		def load_configuration(file_path)
+			puts "loading configuration"
 			if File.file?(file_path)
 				@client_secret = JSON.parse(File.read(file_path))
 				@client_secret_file_path = file_path
@@ -110,6 +112,7 @@ class PodcastUploader
 		end
 
 		def save_configuration
+			puts "saving current configuration"
 			@client_secret['installed']['refresh_token'] = @account.authentication.refresh_token
 			File.write(@client_secret_file_path, @client_secret.to_json)
 		end
