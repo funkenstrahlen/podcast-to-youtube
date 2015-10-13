@@ -53,6 +53,7 @@ class PodcastUploader
 
 	def authenticate_youtube_by_refresh_token
 		@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
+		save_configuration
 	end
 
 
@@ -99,7 +100,6 @@ class PodcastUploader
 						# refresh authentication if expired
 						if @account.authentication.expired?
 							authenticate_youtube_by_refresh_token
-							save_configuration
 						end
 						@account.upload_video videofile, privacy_status: :private, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
 					end
