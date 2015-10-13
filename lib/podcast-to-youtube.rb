@@ -12,20 +12,6 @@ class PodcastUploader
 	@client_secret_file_path
 	@account
 
-	def load_configuration(file_path)
-		if File.file?(file_path)
-			@client_secret = JSON.parse(File.read(file_path))
-			@client_secret_file_path = file_path
-		else 
-			raise "Could not find config file at #{file_path}. This is required for the Youtube API authentication. More information can be found in the Readme."
-		end
-	end
-
-	def save_configuration
-		@client_secret['installed']['refresh_token'] = @account.authentication.refresh_token
-		File.write(@client_secret_file_path, @client_secret.to_json)
-	end
-
 	def authenticate_youtube(client_secret_file_path = 'client_secret.json')
 		load_configuration client_secret_file_path
 
@@ -49,17 +35,6 @@ class PodcastUploader
 
 			save_configuration
 		end
-	end
-
-	def authenticate_youtube_by_refresh_token
-		@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
-		save_configuration
-	end
-
-
-	def parse_feed
-		puts "parsing feed"
-		return Feedjira::Feed.fetch_and_parse podcast_feed_url
 	end
 
 	def upload(podcast_feed_url, video_category_id, privacy = :private)
@@ -112,17 +87,41 @@ class PodcastUploader
 		end
 	end
 
-	def generate_video_description(entry, feed)
-		video_description = "#{entry.itunes_summary}\n\n"
-		video_description += "Mehr Infos und Links zur Episode: #{entry.url}\n"
-		video_description += "Veröffentlicht: #{entry.published}\n"
-		video_description += "Episode herunterladen (Audio): #{entry.url}\n\n"
-		video_description += "Podcast Webseite: #{feed.url}\n"
-		video_description += "Podcast Abonnieren: #{feed.url}\n"
-		video_description += "Podcast Author: #{feed.itunes_author}"
-		return video_description
-	end
+	private
 
-	private :load_configuration :save_configuration :authenticate_youtube_by_refresh_token :parse_feed :generate_video_description
+		def authenticate_youtube_by_refresh_token
+			@account = Yt::Account.new refresh_token: @client_secret['installed']['refresh_token']
+			save_configuration
+		end
 
+
+		def parse_feed
+			puts "parsing feed"
+			return Feedjira::Feed.fetch_and_parse podcast_feed_url
+		end
+
+		def load_configuration(file_path)
+			if File.file?(file_path)
+				@client_secret = JSON.parse(File.read(file_path))
+				@client_secret_file_path = file_path
+			else 
+				raise "Could not find config file at #{file_path}. This is required for the Youtube API authentication. More information can be found in the Readme."
+			end
+		end
+
+		def save_configuration
+			@client_secret['installed']['refresh_token'] = @account.authentication.refresh_token
+			File.write(@client_secret_file_path, @client_secret.to_json)
+		end
+
+		def generate_video_description(entry, feed)
+			video_description = "#{entry.itunes_summary}\n\n"
+			video_description += "Mehr Infos und Links zur Episode: #{entry.url}\n"
+			video_description += "Veröffentlicht: #{entry.published}\n"
+			video_description += "Episode herunterladen (Audio): #{entry.url}\n\n"
+			video_description += "Podcast Webseite: #{feed.url}\n"
+			video_description += "Podcast Abonnieren: #{feed.url}\n"
+			video_description += "Podcast Author: #{feed.itunes_author}"
+			return video_description
+		end
 end
