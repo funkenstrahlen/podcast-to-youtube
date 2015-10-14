@@ -1,5 +1,9 @@
 #Changelog
 
+##0.3.1
+* Code refactoring
+* Readme update
+
 ##0.3.0
 * Allow ruby 1.9.3 or higher
 * Code refactored
