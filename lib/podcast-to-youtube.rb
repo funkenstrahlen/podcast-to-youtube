@@ -33,16 +33,21 @@ class PodcastUploader
 
 	def upload(podcast_feed_url, video_category_id, privacy = :private)
 		feed = parse_feed podcast_feed_url
-
 		feed.entries.reverse_each do |entry|
-
 			audiofile = download_asset entry.enclosure_url
 			coverart = download_asset entry.itunes_image
 			videofile = generate_videofile audiofile coverart
-
-			# upload to youtube
 			video_description = generate_video_description(entry, feed)
 			video_title = "#{feed.title} - #{entry.title}"
+			tags = %w(podcast)
+
+			upload_video video_title video_description video_category_id privacy tags videofile
+		end
+	end
+
+	private
+
+		def upload_video(video_title, video_description, video_category_id, privacy, tags, videofile)
 			if @account.videos.any? {|video| video.title == video_title }
 				puts "do not upload video, as it is already online"
 			else
@@ -51,13 +56,9 @@ class PodcastUploader
 				if @account.authentication.expired?
 					authenticate_youtube_by_refresh_token
 				end
-				@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
+				@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: tags
 			end
-
 		end
-	end
-
-	private
 
 		def generate_videofile(audiofile, coverart)
 			videofile = File.basename(audiofile, File.extname(audiofile)) + ".mkv"
