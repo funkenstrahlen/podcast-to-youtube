@@ -11,6 +11,14 @@ ffmpeg is required to create the video files
 apt-get install ffmpeg
 ```
 
+Current ubuntu versions only have avconv in their ppa's. You can install ffmpeg by adding this ppa:
+
+```
+add-apt-repository ppa:mc3man/trusty-media
+apt-get update
+apt-get install ffmpeg
+```
+
 ruby is required to run the script
 ```
 apt-get install ruby ruby-dev zlib1g-dev
@@ -75,6 +83,6 @@ Options
     -s, --clientsecretfile SECRET    path to the client_secret.json
     -c, --videocategoryid ID         youtube video category id for the uploaded vides
     -h, --help                       print this help
-``
+```
 
 You will have to open an OAuth2 Url in your browser to allow the script to access your Youtube account. Paste the authentication code you receive into the script prompt. After the first authentication the refresh token is saved in the client_secret.json. By using the refresh token the script can reauthenticate to youtube without user interaction.
