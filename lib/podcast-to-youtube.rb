@@ -38,40 +38,40 @@ class PodcastUploader
 
 			audiofile = download_asset entry.enclosure_url
 			coverart = download_asset entry.itunes_image
+			videofile = generate_videofile audiofile coverart
 
-			# convert to mkv format
-			videofile = File.basename(audiofile, File.extname(audiofile)) + ".mkv"
-			if !File.file?(videofile)
-				puts "generating videofile #{videofile}"
-				convertCMD_status = system( "ffmpeg", "-loop", "1", "-r", "2", "-i", "#{coverart}", "-i", "#{audiofile}", "-vf", "scale=-1:1080", "-c:v", "libx264", "-preset", "slow", "-tune", "stillimage", "-crf", "18", "-c:a", "copy", "-shortest", "-pix_fmt", "yuv420p", "-threads", "0", "#{videofile}" )
+			# upload to youtube
+			video_description = generate_video_description(entry, feed)
+			video_title = "#{feed.title} - #{entry.title}"
+			if @account.videos.any? {|video| video.title == video_title }
+				puts "do not upload video, as it is already online"
 			else
-				# file already exists
-				puts "videofile #{videofile} already exists. skipping ffmpeg renderning."
-				convertCMD_status = true
-			end
-
-			if(convertCMD_status)
-				# upload to youtube
-				video_description = generate_video_description(entry, feed)
-				video_title = "#{feed.title} - #{entry.title}"
-				if @account.videos.any? {|video| video.title == video_title }
-					puts "do not upload video, as it is already online"
-				else
-					puts "uploading videofile to Youtube"
-					# refresh authentication if expired
-					if @account.authentication.expired?
-						authenticate_youtube_by_refresh_token
-					end
-					@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
+				puts "uploading videofile to Youtube"
+				# refresh authentication if expired
+				if @account.authentication.expired?
+					authenticate_youtube_by_refresh_token
 				end
-			else
-				raise "generating videofile #{videofile} failed"
+				@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: %w(podcast)
 			end
 
 		end
 	end
 
 	private
+
+		def generate_videofile(audiofile, coverart)
+			videofile = File.basename(audiofile, File.extname(audiofile)) + ".mkv"
+			if !File.file?(videofile)
+				puts "generating videofile #{videofile}"
+				if !system( "ffmpeg", "-loop", "1", "-r", "2", "-i", "#{coverart}", "-i", "#{audiofile}", "-vf", "scale=-1:1080", "-c:v", "libx264", "-preset", "slow", "-tune", "stillimage", "-crf", "18", "-c:a", "copy", "-shortest", "-pix_fmt", "yuv420p", "-threads", "0", "#{videofile}" )
+					raise "generating videofile #{videofile} from #{audiofile} and #{coverart} failed"
+				end
+			else
+				# file already exists
+				puts "videofile #{videofile} already exists. skipping ffmpeg renderning."
+			end
+			return videofile
+		end
 
 		def download_asset(url)
 			puts "downloading asset file from #{url}"
