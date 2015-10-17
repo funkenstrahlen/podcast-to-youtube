@@ -34,30 +34,38 @@ class PodcastUploader
 	def upload(podcast_feed_url, video_category_id, privacy = :private)
 		feed = parse_feed podcast_feed_url
 		feed.entries.reverse_each do |entry|
-			audiofile = download_asset entry.enclosure_url
-			coverart = download_asset entry.itunes_image
-			videofile = generate_videofile audiofile coverart
-			video_description = generate_video_description(entry, feed)
 			video_title = "#{feed.title} - #{entry.title}"
-			tags = %w(podcast)
+			if !video_already_exists(video_title)
+				audiofile = download_asset entry.enclosure_url
+				coverart = download_asset entry.itunes_image
+				videofile = generate_videofile audiofile coverart
+				video_description = generate_video_description(entry, feed)
+				tags = %w(podcast)
 
-			upload_video video_title video_description video_category_id privacy tags videofile
+				upload_video video_title video_description video_category_id privacy tags videofile
+			else
+				puts "video #{video_title} already exists on Youtube. Skipping."
+			end
 		end
 	end
 
 	private
 
-		def upload_video(video_title, video_description, video_category_id, privacy, tags, videofile)
-			if @account.videos.any? {|video| video.title == video_title }
-				puts "do not upload video, as it is already online"
-			else
-				puts "uploading videofile to Youtube"
-				# refresh authentication if expired
-				if @account.authentication.expired?
-					authenticate_youtube_by_refresh_token
-				end
-				@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: tags
+		def refresh_authentication
+			if @account.authentication.expired?
+				authenticate_youtube_by_refresh_token
 			end
+		end
+
+		def upload_video(video_title, video_description, video_category_id, privacy, tags, videofile)
+			puts "uploading videofile to Youtube"
+			refresh_authentication
+			@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: tags
+		end
+
+		def video_already_exists(video_title)
+			refresh_authentication
+			return @account.videos.any? {|video| video.title == video_title }
 		end
 
 		def generate_videofile(audiofile, coverart)
