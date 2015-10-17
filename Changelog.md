@@ -1,5 +1,8 @@
 #Changelog
 
+##0.3.2
+* Check if video exists before doing any rendering. This improves cronjob performance because a lot of actions can be skipped in this case.
+
 ##0.3.1
 * Code refactoring
 * Readme update
