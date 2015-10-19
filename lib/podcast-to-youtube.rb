@@ -38,11 +38,11 @@ class PodcastUploader
 			if !video_already_exists(video_title)
 				audiofile = download_asset entry.enclosure_url
 				coverart = download_asset entry.itunes_image
-				videofile = generate_videofile audiofile coverart
+				videofile = generate_videofile(audiofile, coverart)
 				video_description = generate_video_description(entry, feed)
 				tags = %w(podcast)
 
-				upload_video video_title video_description video_category_id privacy tags videofile
+				upload_video(video_title, video_description, video_category_id, privacy, tags, videofile)
 			else
 				puts "video #{video_title} already exists on Youtube. Skipping."
 			end
@@ -60,7 +60,7 @@ class PodcastUploader
 		def upload_video(video_title, video_description, video_category_id, privacy, tags, videofile)
 			puts "uploading videofile to Youtube"
 			refresh_authentication
-			@account.upload_video videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: tags
+			@account.upload_video(videofile, privacy_status: privacy, title: video_title, description: video_description, category_id: video_category_id, tags: tags)
 		end
 
 		def video_already_exists(video_title)
