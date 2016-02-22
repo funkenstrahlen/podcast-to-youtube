@@ -37,7 +37,14 @@ class PodcastUploader
 			video_title = "#{feed.title} - #{entry.title}"
 			if !video_already_exists(video_title)
 				audiofile = download_asset entry.enclosure_url
-				coverart = download_asset entry.itunes_image
+				coverart_url = entry.itunes_image
+				# if entry has no specific coverart image, use the coverart specified
+				# for the whole feed
+				if coverart_url.nil? or coverart_url == ""
+					puts "could not find episode specific coverart, using the feed default coverart."
+					coverart_url = feed.itunes_image
+				end
+				coverart = download_asset coverart_url
 				videofile = generate_videofile(audiofile, coverart)
 				video_description = generate_video_description(entry, feed)
 				tags = %w(podcast)

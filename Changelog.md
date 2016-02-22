@@ -1,5 +1,8 @@
 #Changelog
 
+##0.3.4
+* Bugfix: Do not crash if an entry does not have a specific coverart image. Use the default feed coverart instead.
+
 ##0.3.3
 * Bugfix
 
